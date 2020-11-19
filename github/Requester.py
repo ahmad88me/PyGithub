@@ -417,12 +417,17 @@ class Requester:
             return self.requestMock(verb, url, parameters, headers, input, encode)
 
     def requestMock(self, verb, url, parameters, headers=None, input=None, encode=None):
+        from .MainClass import DEFAULT_BASE_URL
+
+        if url.startswith(DEFAULT_BASE_URL):
+            url = url.replace(DEFAULT_BASE_URL, "")
         if url in self.mock:
             if verb in self.mock[url]:
                 d = self.mock[url][verb]
             else:
                 raise GithubException.MockException(
-                    "The method <%s> is not found in the mock" % verb
+                    "The method <%s> is not found in the mock for URL <%s>"
+                    % (verb, url)
                 )
         else:
             raise GithubException.MockException(
