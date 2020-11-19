@@ -96,10 +96,11 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.6",
             "Programming Language :: Python :: 3.7",
             "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
             "Topic :: Software Development",
         ],
         python_requires=">=3.5",
-        install_requires=["deprecated", "pyjwt", "requests>=2.14.0"],
+        install_requires=["deprecated", "pyjwt", "requests>=2.14.0,<2.25"],
         extras_require={"integrations": ["cryptography"]},
         tests_require=["cryptography", "httpretty>=0.9.6"],
     )

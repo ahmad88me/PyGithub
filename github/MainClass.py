@@ -278,6 +278,20 @@ class Github(object):
                 self.__requester, headers, data, completed=True
             )
 
+    def get_user_by_id(self, user_id):
+        """
+        :calls: `GET /user/:id <http://developer.github.com/v3/users>`_
+        :param user_id: int
+        :rtype: :class:`github.NamedUser.NamedUser`
+        """
+        assert isinstance(user_id, int), user_id
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET", "/user/" + str(user_id)
+        )
+        return github.NamedUser.NamedUser(
+            self.__requester, headers, data, completed=True
+        )
+
     def get_users(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /users <http://developer.github.com/v3/users>`_
@@ -773,16 +787,6 @@ class Github(object):
         :return: the unpickled object
         """
         return self.create_from_raw_data(*pickle.load(f))
-
-    def get_installation(self, id):
-        """
-
-        :param id:
-        :return:
-        """
-        return Installation.Installation(
-            self.__requester, headers={}, attributes={"id": id}, completed=True
-        )
 
     def get_oauth_application(self, client_id, client_secret):
         return github.ApplicationOAuth.ApplicationOAuth(
