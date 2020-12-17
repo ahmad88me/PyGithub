@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
@@ -90,7 +88,7 @@ DEFAULT_TIMEOUT = 15
 DEFAULT_PER_PAGE = 30
 
 
-class Github(object):
+class Github:
     """
     This is the main class you instantiate to access the Github API v3. Optional parameters allow different authentication methods.
     """
@@ -342,13 +340,13 @@ class Github(object):
         """
         assert isinstance(full_name_or_id, (str, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
-        url = "%s%s" % (url_base, full_name_or_id)
+        url = f"{url_base}{full_name_or_id}"
         if lazy:
             return Repository.Repository(
                 self.__requester, {}, {"url": url}, completed=False
             )
         headers, data = self.__requester.requestJsonAndCheck(
-            "GET", "%s%s" % (url_base, full_name_or_id)
+            "GET", f"{url_base}{full_name_or_id}"
         )
         return Repository.Repository(self.__requester, headers, data, completed=True)
 
@@ -434,7 +432,7 @@ class Github(object):
         query,
         sort=github.GithubObject.NotSet,
         order=github.GithubObject.NotSet,
-        **qualifiers
+        **qualifiers,
     ):
         """
         :calls: `GET /search/repositories <http://developer.github.com/v3/search>`_
@@ -462,7 +460,7 @@ class Github(object):
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
-            query_chunks.append("%s:%s" % (qualifier, value))
+            query_chunks.append(f"{qualifier}:{value}")
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -479,7 +477,7 @@ class Github(object):
         query,
         sort=github.GithubObject.NotSet,
         order=github.GithubObject.NotSet,
-        **qualifiers
+        **qualifiers,
     ):
         """
         :calls: `GET /search/users <http://developer.github.com/v3/search>`_
@@ -503,7 +501,7 @@ class Github(object):
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
-            query_chunks.append("%s:%s" % (qualifier, value))
+            query_chunks.append(f"{qualifier}:{value}")
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -520,7 +518,7 @@ class Github(object):
         query,
         sort=github.GithubObject.NotSet,
         order=github.GithubObject.NotSet,
-        **qualifiers
+        **qualifiers,
     ):
         """
         :calls: `GET /search/issues <http://developer.github.com/v3/search>`_
@@ -544,7 +542,7 @@ class Github(object):
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
-            query_chunks.append("%s:%s" % (qualifier, value))
+            query_chunks.append(f"{qualifier}:{value}")
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -559,7 +557,7 @@ class Github(object):
         sort=github.GithubObject.NotSet,
         order=github.GithubObject.NotSet,
         highlight=False,
-        **qualifiers
+        **qualifiers,
     ):
         """
         :calls: `GET /search/code <http://developer.github.com/v3/search>`_
@@ -588,7 +586,7 @@ class Github(object):
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
-            query_chunks.append("%s:%s" % (qualifier, value))
+            query_chunks.append(f"{qualifier}:{value}")
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -608,7 +606,7 @@ class Github(object):
         query,
         sort=github.GithubObject.NotSet,
         order=github.GithubObject.NotSet,
-        **qualifiers
+        **qualifiers,
     ):
         """
         :calls: `GET /search/commits <http://developer.github.com/v3/search>`_
@@ -636,7 +634,7 @@ class Github(object):
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
-            query_chunks.append("%s:%s" % (qualifier, value))
+            query_chunks.append(f"{qualifier}:{value}")
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -664,7 +662,7 @@ class Github(object):
             query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
-            query_chunks.append("%s:%s" % (qualifier, value))
+            query_chunks.append(f"{qualifier}:{value}")
 
         url_parameters["q"] = " ".join(query_chunks)
         assert url_parameters["q"], "need at least one qualifier"
@@ -812,7 +810,7 @@ class Github(object):
             return GithubApp.GithubApp(self.__requester, headers, data, completed=True)
 
 
-class GithubIntegration(object):
+class GithubIntegration:
     """
     Main class to obtain tokens for a GitHub integration.
     """
@@ -861,7 +859,7 @@ class GithubIntegration(object):
                 self.base_url, installation_id
             ),
             headers={
-                "Authorization": "Bearer {}".format(self.create_jwt()),
+                "Authorization": f"Bearer {self.create_jwt()}",
                 "Accept": Consts.mediaTypeIntegrationPreview,
                 "User-Agent": "PyGithub/Python",
             },
@@ -895,13 +893,13 @@ class GithubIntegration(object):
         :rtype: :class:`github.Installation.Installation`
         """
         headers = {
-            "Authorization": "Bearer {}".format(self.create_jwt()),
+            "Authorization": f"Bearer {self.create_jwt()}",
             "Accept": Consts.mediaTypeIntegrationPreview,
             "User-Agent": "PyGithub/Python",
         }
 
         response = requests.get(
-            "{}/repos/{}/{}/installation".format(self.base_url, owner, repo),
+            f"{self.base_url}/repos/{owner}/{repo}/installation",
             headers=headers,
         )
         response_dict = response.json()
