@@ -408,10 +408,12 @@ class Requester:
             return "application/json", json.dumps(input)
 
         if self.mock is None:
+            print("requestJson> *** No mock")
             return self.__requestEncode(
                 cnx, verb, url, parameters, headers, input, encode
             )
         else:
+            print("requestJson> *** Mock")
             return self.requestMock(verb, url, parameters, headers, input, encode)
 
     def requestMock(self, verb, url, parameters, headers=None, input=None, encode=None):
@@ -447,7 +449,7 @@ class Requester:
             .replace("None", "null")
             .replace("'", '"')
         )
-        responseHeaders = ""
+        responseHeaders = {}
         return status, responseHeaders, output
 
     def requestMultipart(

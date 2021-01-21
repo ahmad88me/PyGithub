@@ -1758,7 +1758,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/contents/" + urllib.parse.quote(path),
             parameters=url_parameters,
         )
-
         # Handle 302 redirect response
         if headers.get("status") == "302 Found" and headers.get("location"):
             headers, data = self._requester.requestJsonAndCheck(
